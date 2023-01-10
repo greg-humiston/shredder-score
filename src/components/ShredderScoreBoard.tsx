@@ -1,4 +1,17 @@
-export const ShredderScoreBoard = () => {
+
+
+const ShredderScoreLabel = (props: {position: number, name: string, score: number}) => {
+  const { position, name, score } = props;
+  return (
+    <div>
+      <span>{`Skater ${position}: ${name} , score: ${score} points`}</span>
+    </div>
+  );
+};
+
+export const ShredderScoreBoard = (props: { shredderList: any[] }) => {
+  const { shredderList = []} = props;
+
   return (
     <div className="shredder-score-board">
       <span>Shredder Score</span>
@@ -9,19 +22,16 @@ export const ShredderScoreBoard = () => {
         <span>{`You scored 0 points by selecting the following skaters:`}</span>
       </div>
       <div>
-        <span>{`Skater 1: ____ , score: `}</span>
-      </div>
-      <div>
-        <span>{`Skater 2: ____ , score: `}</span>
-      </div>
-      <div>
-        <span>{`Skater 3: ____ , score: `}</span>
-      </div>
-      <div>
-        <span>{`Skater 4: ____ , score: `}</span>
-      </div>
-      <div>
-        <span>{`Skater 5: ____ , score: `}</span>
+        {
+          shredderList.map((shredderData , index) => {
+            return (
+              <ShredderScoreLabel
+                {...shredderData}
+                position={index + 1}
+              />
+            );
+          })
+        }
       </div>
     </div>
   );

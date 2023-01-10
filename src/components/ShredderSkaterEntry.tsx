@@ -1,5 +1,5 @@
 import ShredderForm from "./ShredderForm";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ShredForm } from '../types';
 import { defaultFormData, YOUTUBE_DATA_API_KEY } from "../constants";
 import { useQueries } from "react-query";
@@ -9,13 +9,14 @@ type State = 'all' | 'open' | 'done'
 
 const SEARCH_CONFIG = {
   headers: {
-    Authorization: 'Bearer ' + ,
     Accept: 'application/json'
   }
 };
 
+const SEARCH_URL = `https://www.googleapis.com/youtube/v3/search?maxResults=3&type=videos&part=snippet&key=${YOUTUBE_DATA_API_KEY}&q=`;
+
 const toYoutubeAPIUrl = (searchInput: string) => {
-  return `https://www.googleapis.com/youtube/v3/search?part=${searchInput}&key=${YOUTUBE_DATA_API_KEY}`;
+  return `${SEARCH_URL}${searchInput}`;
 };
 
 const fetchSkaterVideoData = async (searchInput: string): Promise<Object> => {
@@ -25,18 +26,40 @@ const fetchSkaterVideoData = async (searchInput: string): Promise<Object> => {
 
 const toHasSkatersToSearch = (skaters: ShredForm) => !!Object.values(skaters).filter(i => i).length;
 
-export const ShredderSkaterEntry = () => {
+const pluck = (key: string): any => (val: any): any => val[key];
+const toData = (shredObject: any): any => {
+  const { data } = shredObject;
+  return data;
+};
+
+export const ShredderSkaterEntry = (props: { onSubmit: Function, shredVideoData: any }) => {
+  const { onSubmit= () => {}, shredVideoData } = props;
   const [skatersToSearch, setSkatersToSearch ] = useState<ShredForm>(defaultFormData);
 
-  const userQueries = useQueries(
-    Object.values(skatersToSearch).map((skaterSearchString: string) => {
-      return {
-        queryKey: ['skater', skaterSearchString],
-        queryFn: () => fetchSkaterVideoData(skaterSearchString),
-        enabled: !!toHasSkatersToSearch(skatersToSearch),
+  // const results = useQueries(
+  //   Object.values(skatersToSearch).map((skaterSearchString: string) => {
+  //     return {
+  //       queryKey: ['skater', skaterSearchString],
+  //       queryFn: () => fetchSkaterVideoData(skaterSearchString),
+  //       enabled: !!toHasSkatersToSearch(skatersToSearch),
+  //     }
+  //   })
+  // );
+  const results: any[] = [];
+
+    useEffect(() => {
+      if (!shredVideoData) {
+        const searchResultList = Object.values(skatersToSearch);
+        const mappedResults = results.map((val, index) => {
+          return { 
+            videoList: val?.data?.items || [],
+            name: searchResultList[index]
+          };
+        });
+
+        onSubmit(mappedResults);
       }
-    })
-  );
+    }, [ shredVideoData ]);
 
   return (
     <div className="shredder-skater-entry">

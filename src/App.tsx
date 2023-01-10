@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg';
 import Spinner from './assets/spinner.svg';
 import './App.css';
 import ShredderSkaterEntry from './components/ShredderSkaterEntry';
+import ShredderMedia from './components/ShredderMedia';
 
 
 // TODO:
@@ -25,10 +26,27 @@ const ShredLoadingSpinner = () => {
 
 export const ShredderScoreApplication = () => {
   // TODO: integrate react router here
+  const [shredVideoData, setShredVideoData] = useState();
 
   return (
     <div className="shredder-app-container">
-      <ShredderSkaterEntry/>
+      {
+        !shredVideoData ? 
+        (
+          <ShredderSkaterEntry
+            shredVideoData={shredVideoData}
+            onSubmit={setShredVideoData}
+          />
+        ) : null
+      }
+      {
+        shredVideoData ?
+        (
+          <ShredderMedia
+            shredderList={shredVideoData}
+          />
+        ) : null
+      }
     </div>
   );
 };

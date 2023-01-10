@@ -36,7 +36,6 @@ export const ShredderForm = (props: any) => {
     <div>
       {
         Object.entries(formData).map(([skaterKey, skaterValue], index) => {
-          console.log('LEL skaterKey:', skaterKey, ', skaterValue:', skaterValue);
           return (
             <ShredderFormInput
               key={skaterKey}

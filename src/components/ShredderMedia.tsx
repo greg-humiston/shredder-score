@@ -1,5 +1,48 @@
 
-export const ShredderMedia = () => {
+const ShredVideoPanel= (props: { label: string }) => {
+  const { label } = props;
+  return (
+    <div>
+      <span>{label}</span>
+      <div>{/* embedded player here */}</div>
+    </div>
+  );
+};
+
+const ShredderVideoList = (
+  props: { 
+    position: number, 
+    shredder: { videoList: any[], name: string, score: number } 
+  }
+) => {
+  const { position, shredder } = props;
+  const { videoList, name, score } = shredder;
+
+  return (
+    <div> 
+      <div>
+        <span>{`Skater ${position}: ${name}`}</span>
+        <span>{`Score: ${score}`}</span>
+      </div>
+      <div>
+        {
+          videoList.map((videoData: { title: string }, index: number) => {
+            const { title } = videoData;
+            return (
+              <ShredVideoPanel
+                label={`Video ${index + 1}: ${title}`}
+              />
+            );
+          })
+        }
+      </div>
+    </div>
+  );
+};
+
+export const ShredderMedia = (props: { shredderList: [] }) => {
+  const { shredderList = [] } = props;
+
   return (
     <div className="shredder-media-wrapper">
       <span>Shredder Score Videos</span>
@@ -7,28 +50,17 @@ export const ShredderMedia = () => {
         <span>The following videos were used to determine this score:</span>
       </div>
       <div>
-        <div>
-          <span>{`Skater 1: `}</span>
-          <span>{`Overall Score: `}</span>
-        </div>
-        <div>
-          <span>Videos:</span>
-          <div>
-            <span>{`Video 1:`}</span>
-            <span>{`Score:`}</span>
-            <div>{/* embedded player here */}</div>
-          </div>
-          <div>
-            <span>{`Video 2:`}</span>
-            <span>{`Score:`}</span>
-            <div>{/* embedded player here */}</div>
-          </div>
-          <div>
-            <span>{`Video 3:`}</span>
-            <span>{`Score:`}</span>
-            <div>{/* embedded player here */}</div>
-          </div>
-        </div>
+        {
+          shredderList.map((shredder: { videoList: any[], name: string, score: number }, index: number) => {
+            return (
+              <ShredderVideoList
+                position={index + 1}
+                shredder={shredder}
+                key={name}
+              />
+            );
+          })
+        }
       </div>
     </div>
   );
