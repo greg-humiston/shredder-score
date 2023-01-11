@@ -4,6 +4,7 @@ import { ShredForm } from '../types';
 import { defaultFormData, YOUTUBE_DATA_API_KEY } from "../constants";
 import { useQueries } from "react-query";
 import axios from "axios";
+import MOCK_YOUTUBE_SEARCH_RESPONSE from "../assets/mockData";
 
 type State = 'all' | 'open' | 'done'
 
@@ -45,8 +46,7 @@ export const ShredderSkaterEntry = (props: { onSubmit: Function, shredVideoData:
   //     }
   //   })
   // );
-  const results: any[] = [];
-
+  const results: any[] = MOCK_YOUTUBE_SEARCH_RESPONSE;
     useEffect(() => {
       if (!shredVideoData) {
         const searchResultList = Object.values(skatersToSearch);
