@@ -9,6 +9,25 @@ const ShredVideoPanel= (props: { label: string }) => {
   );
 };
 
+type YoutubeVideoThumbnail = {
+  height: number,
+  url: string,
+  width: number
+};
+
+type YoutubeVideoThumbnailSize = {
+  high: YoutubeVideoThumbnail
+};
+
+type YoutubeVideoSnippet = {
+  title: string,
+  thumnails: YoutubeVideoThumbnailSize
+};
+
+type YoutubeVideoObject = {
+  snippet: YoutubeVideoSnippet
+};
+
 const ShredderVideoList = (
   props: { 
     position: number, 
@@ -26,11 +45,28 @@ const ShredderVideoList = (
       </div>
       <div>
         {
-          videoList.map((videoData: { title: string }, index: number) => {
-            const { title } = videoData;
+          videoList.map((videoData: YoutubeVideoObject, index: number) => {
+            const { 
+              snippet: { 
+                title, 
+                thumnails: {
+                  high: {
+                    height,
+                    width,
+                    url
+                  } = {}
+                } = {}
+              } = {}
+            } = videoData;
+            /**
+             * 
+             * shredderList
+             */
+
             return (
               <ShredVideoPanel
                 label={`Video ${index + 1}: ${title}`}
+                key={title}
               />
             );
           })
@@ -56,7 +92,7 @@ export const ShredderMedia = (props: { shredderList: [] }) => {
               <ShredderVideoList
                 position={index + 1}
                 shredder={shredder}
-                key={name}
+                key={shredder.name}
               />
             );
           })

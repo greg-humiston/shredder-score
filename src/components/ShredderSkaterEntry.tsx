@@ -52,14 +52,14 @@ export const ShredderSkaterEntry = (props: { onSubmit: Function, shredVideoData:
         const searchResultList = Object.values(skatersToSearch);
         const mappedResults = results.map((val, index) => {
           return { 
-            videoList: val?.data?.items || [],
+            videoList: val.items,
             name: searchResultList[index]
           };
         });
 
         onSubmit(mappedResults);
       }
-    }, [ shredVideoData ]);
+    }, [ shredVideoData, results ]);
 
   return (
     <div className="shredder-skater-entry">
